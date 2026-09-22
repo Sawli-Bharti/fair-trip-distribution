@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
     java.util.Optional<Trip> findByExternalTripId(String externalTripId);
+    
+    
     boolean existsByExternalTripId(String externalTripId);
 
 }

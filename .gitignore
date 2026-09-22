@@ -38,3 +38,5 @@ build/
 ### Others ###
 *.log
 .env
+
+gen*.py

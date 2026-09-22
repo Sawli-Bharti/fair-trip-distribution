@@ -4,4 +4,5 @@ public class VendorDto {
     @NotBlank public String code;
     @NotBlank public String name;
     public boolean isActive = true;
+    public int priority = 0;
 }

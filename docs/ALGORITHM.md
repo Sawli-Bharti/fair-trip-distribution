@@ -13,19 +13,33 @@ Fairness is tracked using integer basis points to ensure precision without float
 * 100% share = 10,000 basis points.
 
 ## Shortfall Calculation
-The core metric for deciding the next vendor is the **shortfall**.
+For a vendor in a bucket, the shortfall represents how many basis points of a trip they are owed:
+shortfall = (bucket.totalTrips * targetBasisPoints) - (vendor.allocatedTrips * 10000)
 
-```
-shortfall = (bucket.totalTrips * targetBasisPoints) / (vendor.allocatedTrips * 10000)
-```
+* Large positive shortfall = vendor is most behind their promised share.
+* Negative shortfall = vendor is ahead of their promised share.
+* Calculations use safe integer/long arithmetic without floating-point conversion.
 
-## Selection Criteria
-1. The vendor with the highest eligible shortfall is selected.
-2. **Tie-breaking** must be deterministic (e.g., using vendor ID or creation timestamp).
-3. **Capacity:** A vendor with no available capacity cannot receive a trip.
-4. **Rejection:** A rejected vendor cannot receive the same trip during its cooldown period.
+## Deterministic Tie-breaking
+When two or more eligible vendors have exactly the same shortfall:
+1. **Priority**: Vendor with lower priority value wins.
+2. **Vendor ID**: If priority is identical, the vendor with the lower Vendor ID wins.
+Randomness is never used. The same state always yields the exact same allocation.
 
-## State Management
-* **Carry-forward:** Allocation state persists across days.
-* **Idempotency:** The same external trip must not be allocated twice.
-* **Concurrency:** MySQL transactions and appropriate row-level locking will protect allocation state and vendor capacity.
+## Carry-Forward and State Updates
+The allocation state is strictly **cumulative**. Bucket total trips and vendor allocated trips are never reset.
+This ensures continuous carry-forward fairness across days.
+
+Update execution strictly follows:
+1. Calculate shortfalls based on current totals.
+2. Select the most-owed eligible vendor.
+3. Increment bucket 	otalTrips.
+4. Increment vendor llocatedTrips.
+5. Persist via a single atomic transaction.
+
+## Complexity
+The expected straightforward complexity is **O(V)** per trip, where V is the number of candidate vendors. Sorting/scanning shortfalls is bounded by the number of active vendors.
+
+## Assumptions
+* Zone matching evaluates based on distance: minDistance <= distance < maxDistance. (FAR zone has no upper bound, i.e., maxDistance is null).
+* Concurrent allocations on the same bucket are serialized using pessimistic row locking to prevent race conditions in counters.

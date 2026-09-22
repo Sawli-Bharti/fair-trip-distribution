@@ -18,7 +18,7 @@ public class Zone {
     @Column(nullable = false)
     private BigDecimal minDistance;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private BigDecimal maxDistance;
     
     @Column(nullable = false)

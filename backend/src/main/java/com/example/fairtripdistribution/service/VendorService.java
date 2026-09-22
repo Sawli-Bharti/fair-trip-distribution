@@ -27,6 +27,7 @@ public class VendorService {
         vendor.setCode(dto.code);
         vendor.setName(dto.name);
         vendor.setActive(dto.isActive);
+        vendor.setPriority(dto.priority);
         return vendorRepository.save(vendor);
     }
     
@@ -39,6 +40,7 @@ public class VendorService {
         vendor.setCode(dto.code);
         vendor.setName(dto.name);
         vendor.setActive(dto.isActive);
+        vendor.setPriority(dto.priority);
         return vendorRepository.save(vendor);
     }
     

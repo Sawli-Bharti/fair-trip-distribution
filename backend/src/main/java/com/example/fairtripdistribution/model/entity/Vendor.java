@@ -18,6 +18,9 @@ public class Vendor {
     @Column(nullable = false)
     private boolean isActive = true;
     
+    @Column(nullable = false)
+    private int priority = 0;
+    
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -27,6 +30,8 @@ public class Vendor {
     public void setCode(String code) { this.code = code; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    public int getPriority() { return priority; }
+    public void setPriority(int priority) { this.priority = priority; }
     public boolean isActive() { return isActive; }
     public void setActive(boolean active) { isActive = active; }
     public LocalDateTime getCreatedAt() { return createdAt; }

@@ -67,7 +67,7 @@ public class ZoneService {
     }
     
     private void validateZoneData(ZoneDto dto, Long excludeId) {
-        if (dto.minDistance == null || dto.maxDistance == null || dto.minDistance.compareTo(dto.maxDistance) >= 0) {
+        if (dto.minDistance == null || (dto.maxDistance != null && dto.minDistance.compareTo(dto.maxDistance) >= 0)) {
             throw new BusinessValidationException("Invalid zone range: min must be less than max");
         }
         validateOverlap(dto, excludeId);
@@ -77,8 +77,9 @@ public class ZoneService {
         List<Zone> activeZones = zoneRepository.findByIsActiveTrue();
         for (Zone z : activeZones) {
             if (excludeId != null && z.getId().equals(excludeId)) continue;
-            boolean noOverlap = dto.maxDistance.compareTo(z.getMinDistance()) <= 0 || 
-                                dto.minDistance.compareTo(z.getMaxDistance()) >= 0;
+            boolean noOverlap = false;
+            if (dto.maxDistance != null && dto.maxDistance.compareTo(z.getMinDistance()) <= 0) noOverlap = true;
+            else if (z.getMaxDistance() != null && dto.minDistance.compareTo(z.getMaxDistance()) >= 0) noOverlap = true;
             if (!noOverlap) {
                 throw new BusinessValidationException("Zone range overlaps with an existing active zone");
             }
