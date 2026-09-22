@@ -65,7 +65,14 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
   * Environment variable config for JWT_SECRET and JWT_EXPIRATION.
   * User passwords secured uniquely with BCryptPasswordEncoder.
 
-* **Phase 6 (Current):** Caching, and Dashboards (if requested).
+* **Phase 6A (Completed):** Redis Caching for Configuration.
+  * Added Spring Cache abstraction with Redis.
+  * Redis acts purely as a performance cache. MySQL remains the source of truth.
+  * Implemented CacheErrorHandler to gracefully fall back to MySQL if Redis is unavailable, ensuring high availability.
+  * **Cache Entries:** ctiveZones (ZoneRepository), endorZoneShares (VendorZoneShareRepository), endors (VendorService).
+  * **TTL:** 10 minutes.
+  * **Eviction Rules:** Full cache eviction (@CacheEvict(allEntries=true)) triggered immediately on vendor/zone create, update, or toggle active, and on share configuration changes.
+  * No caching for highly dynamic or correct-sensitive data (allocation states, capacity, etc.).
 
 ## Important Decisions
 * `maxDistance` on Zone was made strictly nullable to cleanly accommodate open-ended zones (e.g., FAR).

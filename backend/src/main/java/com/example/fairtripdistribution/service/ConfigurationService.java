@@ -12,6 +12,7 @@ import com.example.fairtripdistribution.repository.VendorZoneShareRepository;
 import com.example.fairtripdistribution.repository.VendorCapacityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,7 @@ public class ConfigurationService {
     }
     
     @Transactional
+    @CacheEvict(value = "vendorZoneShares", key = "#zoneId + '-' + #config.tripType")
     public void configureZoneShares(Long zoneId, ZoneShareConfigDto config) {
         Zone zone = zoneService.getZone(zoneId);
         if (!zone.isActive()) {

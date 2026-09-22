@@ -7,6 +7,8 @@ import com.example.fairtripdistribution.model.entity.Vendor;
 import com.example.fairtripdistribution.repository.VendorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class VendorService {
     }
     
     @Transactional
+    @CacheEvict(value = "vendors", allEntries = true)
     public Vendor createVendor(VendorDto dto) {
         if (vendorRepository.existsByCode(dto.code)) {
             throw new BusinessValidationException("Vendor code must be unique");
@@ -32,6 +35,7 @@ public class VendorService {
     }
     
     @Transactional
+    @CacheEvict(value = "vendors", allEntries = true)
     public Vendor updateVendor(Long id, VendorDto dto) {
         Vendor vendor = getVendor(id);
         if (!vendor.getCode().equals(dto.code) && vendorRepository.existsByCode(dto.code)) {
@@ -45,6 +49,7 @@ public class VendorService {
     }
     
     @Transactional
+    @CacheEvict(value = "vendors", allEntries = true)
     public Vendor toggleActive(Long id, boolean active) {
         Vendor vendor = getVendor(id);
         vendor.setActive(active);
@@ -56,6 +61,7 @@ public class VendorService {
             .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
     }
     
+    @Cacheable(value = "vendors")
     public List<Vendor> listVendors() {
         return vendorRepository.findAll();
     }

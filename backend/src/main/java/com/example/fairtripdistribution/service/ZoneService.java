@@ -7,6 +7,7 @@ import com.example.fairtripdistribution.model.entity.Zone;
 import com.example.fairtripdistribution.repository.ZoneRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ public class ZoneService {
     }
     
     @Transactional
+    @CacheEvict(value = "activeZones", allEntries = true)
     public Zone createZone(ZoneDto dto) {
         validateZoneData(dto, null);
         Zone zone = new Zone();
@@ -32,6 +34,7 @@ public class ZoneService {
     }
     
     @Transactional
+    @CacheEvict(value = "activeZones", allEntries = true)
     public Zone updateZone(Long id, ZoneDto dto) {
         validateZoneData(dto, id);
         Zone zone = getZone(id);
@@ -44,6 +47,7 @@ public class ZoneService {
     }
     
     @Transactional
+    @CacheEvict(value = "activeZones", allEntries = true)
     public Zone toggleActive(Long id, boolean active) {
         Zone zone = getZone(id);
         if (active) {
