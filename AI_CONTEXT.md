@@ -47,7 +47,11 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
 ## Project Phases
 * **Phase 0:** Project foundation (Maven Spring Boot init, structure, docs) - Completed.
 * **Phase 1:** Database entities and repositories - Completed.
-* **Phase 2 (Current):** Business logic and services.
+* **Phase 2:** Vendor and Zone Configuration - Completed.
+  * Implemented REST APIs and Services for Vendors, Zones, VendorZoneShares, and VendorCapacity.
+  * Important Rules: Zone distances cannot overlap if active, vendor capacity cannot exceed total and cannot be negative, VendorZoneShares must strictly total 10000 basis points per Zone+TripType, inactive zones/vendors cannot be assigned shares or capacities.
+  * Unit/Integration tests (`ConfigurationRulesTest`) cover 12+ strict configuration boundary requirements.
+* **Phase 3 (Current):** Trip Allocation Engine (Most-Owed-First algorithm, shortfall calculation, idempotency).
 
 ## Important Decisions
 * Do NOT redesign agreed decisions without explicit approval.

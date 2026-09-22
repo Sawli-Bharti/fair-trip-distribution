@@ -14,6 +14,9 @@ public class VendorCapacity {
     private Vendor vendor;
     
     @Column(nullable = false)
+    private int totalCapacity;
+    
+    @Column(nullable = false)
     private int availableCapacity;
     
     @Column(nullable = false)
@@ -23,6 +26,8 @@ public class VendorCapacity {
     public void setId(Long id) { this.id = id; }
     public Vendor getVendor() { return vendor; }
     public void setVendor(Vendor vendor) { this.vendor = vendor; }
+    public int getTotalCapacity() { return totalCapacity; }
+    public void setTotalCapacity(int totalCapacity) { this.totalCapacity = totalCapacity; }
     public int getAvailableCapacity() { return availableCapacity; }
     public void setAvailableCapacity(int availableCapacity) { this.availableCapacity = availableCapacity; }
     public LocalDateTime getLastUpdated() { return lastUpdated; }

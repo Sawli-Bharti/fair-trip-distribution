@@ -1,10 +1,8 @@
 package com.example.fairtripdistribution.repository;
-
 import com.example.fairtripdistribution.model.entity.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
+import java.util.Optional;
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
-
+    Optional<Vendor> findByCode(String code);
+    boolean existsByCode(String code);
 }

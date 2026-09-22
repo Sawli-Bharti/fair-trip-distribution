@@ -24,6 +24,8 @@ public class PersistenceLayerVerificationTest {
         Zone zone = new Zone();
         zone.setCode("NORTH_1");
         zone.setName("North Zone 1");
+        zone.setMinDistance(new java.math.BigDecimal("0"));
+        zone.setMaxDistance(new java.math.BigDecimal("15"));
         
         Zone saved = zoneRepository.save(zone);
         
@@ -31,4 +33,5 @@ public class PersistenceLayerVerificationTest {
         assertThat(zoneRepository.findById(saved.getId())).isPresent();
     }
 }
+
 

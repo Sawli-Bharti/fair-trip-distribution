@@ -1,6 +1,7 @@
 package com.example.fairtripdistribution.model.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "zones")
@@ -13,6 +14,15 @@ public class Zone {
     
     @Column(nullable = false)
     private String name;
+    
+    @Column(nullable = false)
+    private BigDecimal minDistance;
+    
+    @Column(nullable = false)
+    private BigDecimal maxDistance;
+    
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -20,4 +30,10 @@ public class Zone {
     public void setCode(String code) { this.code = code; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    public BigDecimal getMinDistance() { return minDistance; }
+    public void setMinDistance(BigDecimal minDistance) { this.minDistance = minDistance; }
+    public BigDecimal getMaxDistance() { return maxDistance; }
+    public void setMaxDistance(BigDecimal maxDistance) { this.maxDistance = maxDistance; }
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
 }
