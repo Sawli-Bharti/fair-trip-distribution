@@ -32,6 +32,11 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
 * MySQL is the authoritative source of truth.
 * Redis is a cache/performance layer only.
 * Concurrency handled via MySQL transactions and row-level locking.
+* **Phase 1 Schema Decisions:**
+  * Created standard `@Entity` classes for User, Vendor, Zone, VendorZoneShare, Trip, VendorCapacity, AllocationBucket, VendorAllocationState, TripAllocation, TripRejection.
+  * Used `int` basis points for fairness calculations (no floats).
+  * Unique constraints applied (e.g. `externalTripId`, `VendorZoneShare`, `AllocationBucket`).
+  * Repositories set up to support future row-locking without implementing it prematurely.
 
 ## Important Constraints
 * Capacity: Vendor with no capacity cannot receive a trip.
@@ -41,7 +46,8 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
 
 ## Project Phases
 * **Phase 0:** Project foundation (Maven Spring Boot init, structure, docs) - Completed.
-* **Phase 1 (Current):** Database entities and repositories.
+* **Phase 1:** Database entities and repositories - Completed.
+* **Phase 2 (Current):** Business logic and services.
 
 ## Important Decisions
 * Do NOT redesign agreed decisions without explicit approval.
