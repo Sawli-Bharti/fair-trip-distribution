@@ -5,11 +5,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+        return new ResponseEntity<>(java.util.Collections.singletonMap("error", "Invalid email or password"), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
+        return new ResponseEntity<>(java.util.Collections.singletonMap("error", "Forbidden"), HttpStatus.FORBIDDEN);
+    }
+
 
     @ExceptionHandler(BusinessValidationException.class)
     public ResponseEntity<Map<String, String>> handleBusiness(BusinessValidationException ex) {

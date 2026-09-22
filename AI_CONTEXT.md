@@ -58,7 +58,14 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
   * Vendor Capacity acts as a strict eligibility constraint. Consume capacity upon allocation under pessimistic lock.
   * Rejection completely reverses allocation state counters correctly and injects a per-trip cooldown (does not block unrelated trips).
   * Fully atomic and heavily concurrency-tested.
-* **Phase 5 (Current):** Authentication, Caching, and Dashboards (if requested).
+* **Phase 5 (Completed):** JWT Authentication & Role-Based Authorization.
+  * Implemented fully stateless JWT security using JJWT and Spring Security Filter Chain.
+  * Secured /api/auth/** as public. Protected endpoints with @PreAuthorize.
+  * Roles: ADMIN (Configuration/Vendor/Zone management), USER (Allocations).
+  * Environment variable config for JWT_SECRET and JWT_EXPIRATION.
+  * User passwords secured uniquely with BCryptPasswordEncoder.
+
+* **Phase 6 (Current):** Caching, and Dashboards (if requested).
 
 ## Important Decisions
 * `maxDistance` on Zone was made strictly nullable to cleanly accommodate open-ended zones (e.g., FAR).
