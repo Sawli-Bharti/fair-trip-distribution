@@ -25,6 +25,9 @@ public class TripRejection {
     
     @Column(nullable = false)
     private LocalDateTime cooldownUntil;
+    
+    @Column(nullable = true)
+    private String reason;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,4 +39,6 @@ public class TripRejection {
     public void setRejectedAt(LocalDateTime rejectedAt) { this.rejectedAt = rejectedAt; }
     public LocalDateTime getCooldownUntil() { return cooldownUntil; }
     public void setCooldownUntil(LocalDateTime cooldownUntil) { this.cooldownUntil = cooldownUntil; }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
 }

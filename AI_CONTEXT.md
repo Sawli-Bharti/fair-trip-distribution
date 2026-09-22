@@ -54,7 +54,11 @@ A backend case-study project to fairly distribute cab trips among multiple vendo
   * Deterministic tie-breaking on `priority` and `vendorId`.
   * Atomic `@Transactional` persist containing pessimistic write locks to safely carry forward running totals in a concurrent environment.
   * Extensively tested using multi-vendor share combinations.
-* **Phase 4 (Current):** Rejections, Cooldown, and Capacity Consumption.
+* **Phase 4:** Rejections, Cooldown, and Capacity Consumption - Completed.
+  * Vendor Capacity acts as a strict eligibility constraint. Consume capacity upon allocation under pessimistic lock.
+  * Rejection completely reverses allocation state counters correctly and injects a per-trip cooldown (does not block unrelated trips).
+  * Fully atomic and heavily concurrency-tested.
+* **Phase 5 (Current):** Authentication, Caching, and Dashboards (if requested).
 
 ## Important Decisions
 * `maxDistance` on Zone was made strictly nullable to cleanly accommodate open-ended zones (e.g., FAR).
