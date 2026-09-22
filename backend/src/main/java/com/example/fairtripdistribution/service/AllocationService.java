@@ -8,6 +8,7 @@ import com.example.fairtripdistribution.model.entity.enums.*;
 import com.example.fairtripdistribution.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,6 +40,7 @@ public class AllocationService {
     }
 
     @Transactional
+    @CacheEvict(value = {"dailyReports", "monthlyReports"}, allEntries = true)
     public TripAllocateResponseDto allocateTrip(TripAllocateRequestDto request) {
         // Idempotency check
         Optional<Trip> existingTripOpt = tripRepository.findByExternalTripId(request.externalTripId);
@@ -201,6 +203,7 @@ public class AllocationService {
     }
 
     @Transactional
+    @CacheEvict(value = {"dailyReports", "monthlyReports"}, allEntries = true)
     public TripAllocateResponseDto rejectTrip(TripRejectRequestDto request) {
         Trip trip = tripRepository.findByExternalTripId(request.externalTripId)
             .orElseThrow(() -> new ResourceNotFoundException("Trip not found"));

@@ -45,8 +45,10 @@ public class RedisConfig implements CachingConfigurer {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
                 .disableCachingNullValues();
 
-        return RedisCacheManager.builder(connectionFactory)
+                return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
+                .withCacheConfiguration("dailyReports", config.entryTtl(Duration.ofMinutes(5)))
+                .withCacheConfiguration("monthlyReports", config.entryTtl(Duration.ofMinutes(5)))
                 .build();
     }
 

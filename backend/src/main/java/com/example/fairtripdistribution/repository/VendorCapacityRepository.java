@@ -2,16 +2,22 @@ package com.example.fairtripdistribution.repository;
 
 import com.example.fairtripdistribution.model.entity.VendorCapacity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.LockModeType;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VendorCapacityRepository extends JpaRepository<VendorCapacity, Long> {
+    Optional<VendorCapacity> findByVendorId(Long vendorId);
 
-    java.util.Optional<VendorCapacity> findByVendorId(Long vendorId);
-    
-    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
-    @org.springframework.data.jpa.repository.Query("SELECT c FROM VendorCapacity c WHERE c.vendor.id IN :vendorIds ORDER BY c.vendor.id")
-    java.util.List<VendorCapacity> findByVendorIdInForUpdate(@org.springframework.data.repository.query.Param("vendorIds") java.util.List<Long> vendorIds);
-    
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT c FROM VendorCapacity c WHERE c.vendor.id IN :vendorIds")
+    List<VendorCapacity> findByVendorIdInForUpdate(@Param("vendorIds") List<Long> vendorIds);
 
+    @Query("SELECT c FROM VendorCapacity c JOIN FETCH c.vendor")
+    List<VendorCapacity> findAllWithVendor();
 }
