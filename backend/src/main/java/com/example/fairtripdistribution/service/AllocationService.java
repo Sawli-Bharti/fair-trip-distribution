@@ -7,6 +7,8 @@ import com.example.fairtripdistribution.model.entity.*;
 import com.example.fairtripdistribution.model.entity.enums.*;
 import com.example.fairtripdistribution.repository.*;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class AllocationService {
+
+    private static final Logger log = LoggerFactory.getLogger(AllocationService.class);
+
     private final TripRepository tripRepository;
     private final TripAllocationRepository tripAllocationRepository;
     private final ZoneRepository zoneRepository;
@@ -155,6 +160,7 @@ public class AllocationService {
         }
 
         if (selectedVendor == null) {
+            log.warn("No eligible vendor for allocation: externalTripId={} zone={} type={}", request.externalTripId, zone.getCode(), request.tripType);
             throw new BusinessValidationException("No eligible vendor found for allocation");
         }
 
@@ -199,6 +205,8 @@ public class AllocationService {
         allocation.setStatus(AllocationStatus.SUCCESS);
         allocation = tripAllocationRepository.save(allocation);
 
+        log.info("Trip allocated: externalTripId={} vendor={} zone={} type={}",
+                trip.getExternalTripId(), selectedVendor.getCode(), zone.getCode(), request.tripType);
         return mapToResponse(trip, allocation);
     }
 
@@ -250,6 +258,7 @@ public class AllocationService {
             capacityRepository.save(cap);
         }
         
+        log.info("Trip rejected: externalTripId={} vendor={} reason={}", request.externalTripId, vendor.getCode(), request.reason);
         // 5. Re-run allocation for the same trip
         TripAllocateRequestDto req = new TripAllocateRequestDto();
         req.externalTripId = trip.getExternalTripId();
