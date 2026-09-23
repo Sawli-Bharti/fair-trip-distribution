@@ -49,6 +49,7 @@ public class Phase6BReportTest {
     @Autowired private VendorZoneShareRepository shareRepository;
     @Autowired private TripRepository tripRepository;
     @Autowired private TripAllocationRepository tripAllocationRepository;
+    @Autowired private TripRejectionRepository tripRejectionRepository;
     @Autowired private AllocationBucketRepository bucketRepository;
     @Autowired private VendorAllocationStateRepository stateRepository;
     @Autowired private CacheManager cacheManager;
@@ -58,6 +59,7 @@ public class Phase6BReportTest {
 
     @BeforeEach
     public void setup() {
+        tripRejectionRepository.deleteAll();
         tripAllocationRepository.deleteAll();
         tripRepository.deleteAll();
         stateRepository.deleteAll();

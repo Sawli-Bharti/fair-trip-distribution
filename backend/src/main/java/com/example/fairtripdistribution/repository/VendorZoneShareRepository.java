@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 public interface VendorZoneShareRepository extends JpaRepository<VendorZoneShare, Long> {
     @Cacheable(value = "vendorZoneShares", key = "#zoneId + '-' + #tripType")
     List<VendorZoneShare> findByZoneIdAndTripType(Long zoneId, TripType tripType);
+    List<VendorZoneShare> findAllByZoneIdAndTripType(Long zoneId, TripType tripType);
     void deleteByZoneIdAndTripType(Long zoneId, TripType tripType);
     @Query("SELECT s FROM VendorZoneShare s JOIN FETCH s.vendor JOIN FETCH s.zone")
     List<VendorZoneShare> findAllWithVendorAndZone();

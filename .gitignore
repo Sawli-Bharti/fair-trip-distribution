@@ -43,3 +43,7 @@ gen*.py
 fix*.py
 add*.py
 mod*.py
+update*.py
+
+
+AI_CONTEXT.md

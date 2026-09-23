@@ -2,20 +2,25 @@ package com.example.fairtripdistribution.model.entity;
 
 import com.example.fairtripdistribution.model.entity.enums.TripType;
 import jakarta.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "vendor_zone_shares", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"vendor_id", "zone_id", "trip_type"})
 })
-public class VendorZoneShare {
+public class VendorZoneShare implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
     
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
     

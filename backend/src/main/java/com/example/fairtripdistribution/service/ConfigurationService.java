@@ -17,6 +17,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 @Service
@@ -65,16 +67,32 @@ public class ConfigurationService {
             throw new BusinessValidationException("Total zone shares must exactly equal 10000 basis points");
         }
         
-        shareRepository.deleteByZoneIdAndTripType(zone.getId(), config.tripType);
+        // Load existing shares
+        List<VendorZoneShare> existingShares = shareRepository.findAllByZoneIdAndTripType(zone.getId(), config.tripType);
+        Map<Long, VendorZoneShare> existingShareMap = existingShares.stream()
+                .collect(Collectors.toMap(s -> s.getVendor().getId(), s -> s));
         
         for (VendorShareDto shareDto : config.vendorShares) {
-            Vendor vendor = vendorService.getVendor(shareDto.vendorId);
-            VendorZoneShare share = new VendorZoneShare();
-            share.setZone(zone);
-            share.setVendor(vendor);
-            share.setTripType(config.tripType);
-            share.setTargetBasisPoints(shareDto.targetBasisPoints);
-            shareRepository.save(share);
+            VendorZoneShare share = existingShareMap.remove(shareDto.vendorId);
+            if (share != null) {
+                // Update existing
+                share.setTargetBasisPoints(shareDto.targetBasisPoints);
+                shareRepository.save(share);
+            } else {
+                // Insert new
+                Vendor vendor = vendorService.getVendor(shareDto.vendorId);
+                VendorZoneShare newShare = new VendorZoneShare();
+                newShare.setZone(zone);
+                newShare.setVendor(vendor);
+                newShare.setTripType(config.tripType);
+                newShare.setTargetBasisPoints(shareDto.targetBasisPoints);
+                shareRepository.save(newShare);
+            }
+        }
+        
+        // Delete removed
+        for (VendorZoneShare oldShare : existingShareMap.values()) {
+            shareRepository.delete(oldShare);
         }
     }
     

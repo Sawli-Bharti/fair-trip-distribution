@@ -32,7 +32,7 @@ public class AuthController {
                    @ApiResponse(responseCode = "400", description = "Email already in use or validation error")
                })
     public ResponseEntity<AuthResponseDto> register(@Valid @RequestBody RegisterRequestDto request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(authService.register(request));
     }
 
     @PostMapping("/login")
